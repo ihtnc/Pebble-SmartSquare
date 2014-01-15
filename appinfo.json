@@ -1,34 +1,39 @@
 {
- "uuid": "82a1470e-48ff-48c9-86b4-889972a06cf5",
-  "shortName": "Wordsquare_2.0",
-  "longName": "Wordsquare_2.0",
-  "companyName": "Hudson & Jnm",
-  "versionCode": 1,
-  "versionLabel": "1.0.0",
-  "watchapp": {
-    "watchface": true
-  },
-  "appKeys": {
-    "dummy": 0
-  },
-  "resources": {
-    "media": [
-      {
-        "menuIcon": true,
-        "type": "png",
-        "name": "IMAGE_MENU_ICON",
-        "file": "images/menu_icon.png"
-      },
-      {
-        "type": "font",
-        "name": "FONT_OFF_20",
-        "file": "fonts/SourceCodePro-Light.otf"
-      },
-      {
-        "type": "font",
-        "name": "FONT_ON_20",
-        "file": "fonts/SourceCodePro-Black.otf"
-      }
-    ]
-  }
+    "versionLabel": "1.0.0",
+    "uuid": "37cfdbd6-4a8d-44c5-a456-4ed9a142c2c2",
+    "appKeys": {
+        "Action": 29052,
+        "BTNotification": 29051,
+        "InvertMode": 29050
+    },
+    "longName": "Pebble-WordSquare",
+    "versionCode": 1,
+    "capabilities": [
+        "configurable"
+    ],
+    "shortName": "WordSquare",
+    "companyName": "ihopethisnamecounts",
+    "watchapp": {
+        "watchface": true
+    },
+    "resources": {
+        "media": [
+            {
+                "type": "font",
+                "name": "FONT_ON_20",
+                "file": "fonts/SourceCodePro-Black.otf"
+            },
+            {
+                "type": "font",
+                "name": "FONT_OFF_20",
+                "file": "fonts/SourceCodePro-Light.otf"
+            },
+            {
+                "menuIcon": true,
+                "type": "png",
+                "name": "IMAGE_MENU_ICON",
+                "file": "images/menu_icon.png"
+            }
+        ]
+    }
 }
