@@ -6,12 +6,12 @@
         "BTNotification": 29051,
         "InvertMode": 29050
     },
-    "longName": "Pebble-WordSquare",
+    "longName": "Pebble-SmartSquare",
     "versionCode": 1,
     "capabilities": [
         "configurable"
     ],
-    "shortName": "WordSquare",
+    "shortName": "SmartSquare",
     "companyName": "ihopethisnamecounts",
     "watchapp": {
         "watchface": true

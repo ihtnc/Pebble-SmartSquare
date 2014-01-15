@@ -97,7 +97,7 @@ static const word_t splash[] =
 	[SPLASH_TWEAKED] = {  0, 0, "TWEAKED", "tweaked" },
 	[SPLASH_BY] = {  1, 8, "BY", "by" },
 	[SPLASH_IHTNC] = {  3, 3, "IHTNC", "ihtnc" },
-	[SPLASH_WORD] = {  6, 8, "WORD", "word" },
+	[SPLASH_WORD] = {  6, 7, "SMART", "smart" },
 	[SPLASH_SQUARE] = {  7, 6, "SQUARE", "square" },
 	[SPLASH_C] = {  8, 5, "(c)2014", "(c)2014" },
 		
@@ -111,7 +111,7 @@ static const word_t splash[] =
 	{  3, 8, "TTO", "tto" },
 	{  4, 0, "NINETENFOURX", "ninetenfourx" },
 	{  5, 0, "EIGHTTWELVEX", "eighttwelvex" },
-	{  6, 0, "ONESIXEL", "onesixel" },
+	{  6, 0, "ONESIXE", "onesixe" },
 	{  7, 0, "TWOSEV", "twosev" },
 	{  8, 0, "THREE", "three" },
 };
@@ -381,7 +381,7 @@ static void handle_timer(void *data)
 	{
 		is_splash_showing = false;
 		clear_splash();
-		timer = app_timer_register(1000, handle_timer, NULL);
+		timer = app_timer_register(750, handle_timer, NULL);
 	}
 	else if(is_init_complete == false)
 	{
@@ -405,7 +405,7 @@ static void handle_tick(struct tm *tick_time, TimeUnits units_changed)
 	if(show_stat == true || is_init_complete == false) return;
 	if(tick_time->tm_min % 5 == 0) clear_words();
 	
-	timer = app_timer_register(1000, handle_timer, NULL);
+	timer = app_timer_register(750, handle_timer, NULL);
 }
 
 static void word_layer_init(int which) 
@@ -451,7 +451,7 @@ static void handle_tap(AccelAxisType axis, int32_t direction)
 	
 	clear_words();
 	display_stat();
-	timer = app_timer_register(3000, handle_timer, NULL);
+	timer = app_timer_register(1250, handle_timer, NULL);
 }
 
 static void inverter_deinit()
@@ -536,7 +536,7 @@ static void splash_init()
 	}
 	
 	display_splash();
-	timer = app_timer_register(2000, handle_timer, NULL);
+	timer = app_timer_register(2250, handle_timer, NULL);
 }
 
 static void splash_deinit()
