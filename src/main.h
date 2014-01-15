@@ -27,15 +27,21 @@
 #define LAYER_BATTERY_100	29
 #define LAYER_FILLER	30
 
+#define SPLASH_TWEAKED	0
+#define SPLASH_BY		1
+#define SPLASH_IHTNC	2
+#define SPLASH_WORD		3
+#define SPLASH_SQUARE	4
+#define SPLASH_C		5
+#define SPLASH_FILLER	6
+	
 typedef struct
 {
 	int row;
 	int col;
-	char text_on[8];
-	char text_off[8];
+	char text_on[12];
+	char text_off[12];
 } word_t;
-
-#define WORD_COUNT ((sizeof(words) / sizeof(*words)))
 	
 #define SCREEN_HEIGHT 168
 #define SCREEN_WIDTH 144

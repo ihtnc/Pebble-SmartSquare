@@ -11,32 +11,32 @@ static GFont font_off;
 
 /** 
 Phase 1 (no overlap)
-    Time:          Status:        Square:
-    012345678901   012345678901   012345678901   
-0 ITxxxISxAxxx 0 xxBTxISxxOFF 0 ITBThISzAOFF 0 
-1 QUARTERTENxx 1 xxxxxxxxxxON 1 QUARTERTENON 1 
-2 TWENTYxFIVE# 2 xxxxxxxxxxx# 2 TWENTYsFIVE# 2 
-3 HALFxPASTTO# 3 xxxxxxxxxxx# 3 HALFsPASTTO# 3 
-4 NINETENFOUR# 4 xxxxxxxxxxx# 4 NINETENFOUR# 4 
-5 EIGHTTWELVE# 5 xxxxxxxxxxx# 5 EIGHTTWELVE# 5 
-6 ONESIXELEVEN 6 xxxxxxxxxxxx 6 ONESIXELEVEN 6 
-7 TWOSEVENFIVE 7 xxxxxxxxxxxx 7 TWOSEVENFIVE 7 
-8 THREExOCLOCK 8 xxxxxxxxxxxx 8 THREEzOCLOCK 8 
-  012345678901   012345678901   012345678901    
+  Time:          Status:        Square:        Splash:
+  012345678901   012345678901   012345678901   012345678901 
+0 ITxxxISxAxxx 0 xxBTxISxxOFF 0 ITBThISzAOFF 0 tweakedZAOFF 0  
+1 QUARTERTENxx 1 xxxxxxxxxxON 1 QUARTERTENON 1 QUARTERTbyON 1  
+2 TWENTYxFIVE# 2 xxxxxxxxxxx# 2 TWENTYrFIVE# 2 TWENTYRFIVE# 2  
+3 HALFxPASTTO# 3 xxxxxxxxxxx# 3 HALFhPASTTO# 3 HALihtncTTO# 3  
+4 NINETENFOUR# 4 xxxxxxxxxxx# 4 NINETENFOUR# 4 NINETENFOUR# 4  
+5 EIGHTTWELVE# 5 xxxxxxxxxxx# 5 EIGHTTWELVE# 5 EIGHTTWELVE# 5  
+6 ONESIXELEVEN 6 xxxxxxxxxxxx 6 ONESIXELEVEN 6 ONESIXELword 6  
+7 TWOSEVENFIVE 7 xxxxxxxxxxxx 7 TWOSEVENFIVE 7 TWOSEVsquare 7  
+8 THREExOCLOCK 8 xxxxxxxxxxxx 8 THREExOCLOCK 8 THREE(c)2014 8  
+  012345678901   012345678901   012345678901   012345678901    
   
 Phase 2 (with overlap)
-    Time:          Status:        Square:
-  012345678901   012345678901   012345678901 
-0 ITxxxISxAxxx 0 xxBTxISxxOFF 0 ITBThIStAOFF 0 
-1 QUARTERTENxx 1 xxxxxxxxxxON 1 QUARTERTENON 1 
-2 TWENTYxFIVE# 2 xxxxxxxxxxx# 2 TWENTYsFIVE# 2 
-3 HALFxPASTox# 3 xxxxxxxxxxx# 3 HALFsPASTOn# 3 
-4 FOUREIGHTEN# 4 xxxxxxxxxxx# 4 FOUREIGHTEN# 4 
-5 THREExTWONE# 5 xxxxxxxxxxx# 5 THREEpTWONE# 5 
-6 TWELVExxSIX# 6 xxxxxxxxxxx# 6 TWELVEntSIX# 6 
-7 FIVELEVENINE 7 xxxxxxxxxxxx 7 FIVELEVENINE 7 
-8 SEVENxOCLOCK 8 xxxxxxxxxxxx 8 SEVENtOCLOCK 8 
-  012345678901   012345678901   012345678901   
+  Time:          Status:        Square:        Splash:
+  012345678901   012345678901   012345678901   012345678901 
+0 ITxxxISxAxxx 0 xxBTxISxxOFF 0 ITBThIStAOFF 0 tweakedtAOFF 0  
+1 QUARTERTENxx 1 xxxxxxxxxxON 1 QUARTERTENON 1 QUARTERTbyON 1  
+2 TWENTYxFIVE# 2 xxxxxxxxxxx# 2 TWENTYsFIVE# 2 TWENTYSFIVE# 2  
+3 HALFxPASTox# 3 xxxxxxxxxxx# 3 HALFhPASTOn# 3 HALihtncTON# 3  
+4 FOUREIGHTEN# 4 xxxxxxxxxxx# 4 FOUREIGHTEN# 4 FOUREIGHTEN# 4  
+5 THREExTWONE# 5 xxxxxxxxxxx# 5 THREEpTWONE# 5 THREEPTWONE# 5  
+6 TWELVExxSIX# 6 xxxxxxxxxxx# 6 TWELVEntSIX# 6 TWELVENword# 6  
+7 FIVELEVENINE 7 xxxxxxxxxxxx 7 FIVELEVENINE 7 FIVELEsquare 7  
+8 SEVENxOCLOCK 8 xxxxxxxxxxxx 8 SEVENtOCLOCK 8 SEVEN(C)2014 8  
+  012345678901   012345678901   012345678901   012345678901    
 */
 
 static const word_t words[] =
@@ -86,19 +86,79 @@ static const word_t words[] =
 	{  0, 4, "h", "h" },
 	{  0, 7, "z", "z" },
 	{  2, 6, "r", "r" },
-	{  3, 4, "q", "q" },
+	{  3, 4, "h", "h" },
 	{  8, 5, "x", "x" },
 };
 
+#define WORD_COUNT ((sizeof(words) / sizeof(*words)))
+	
+static const word_t splash[] =
+{
+	[SPLASH_TWEAKED] = {  0, 0, "TWEAKED", "tweaked" },
+	[SPLASH_BY] = {  1, 8, "BY", "by" },
+	[SPLASH_IHTNC] = {  3, 3, "IHTNC", "ihtnc" },
+	[SPLASH_WORD] = {  6, 8, "WORD", "word" },
+	[SPLASH_SQUARE] = {  7, 6, "SQUARE", "square" },
+	[SPLASH_C] = {  8, 5, "(c)2014", "(c)2014" },
+		
+	// Fillers
+	[SPLASH_FILLER] =
+	{  0, 7, "ZAOFF", "zaoff" },
+	{  1, 0, "QUARTERT", "quartert" },
+	{  1, 10, "ON", "on" },
+	{  2, 0, "TWENTYRFIVEX", "twentyrfivex" },
+	{  3, 0, "HAL", "hal" },
+	{  3, 8, "TTO", "tto" },
+	{  4, 0, "NINETENFOURX", "ninetenfourx" },
+	{  5, 0, "EIGHTTWELVEX", "eighttwelvex" },
+	{  6, 0, "ONESIXEL", "onesixel" },
+	{  7, 0, "TWOSEV", "twosev" },
+	{  8, 0, "THREE", "three" },
+};
+
+#define SPLASH_COUNT ((sizeof(splash) / sizeof(*splash)))
+	
 static Window *window;
 static TextLayer *layers[WORD_COUNT];
+static TextLayer *splash_layers[SPLASH_COUNT];
 static Layer *minute_layer;
 static int minute_num;
 static InverterLayer *inverter;
 
+static bool is_init_complete;
+static bool is_splash_showing;
 static bool is_stat_showing;
 static bool show_stat;
 static AppTimer *timer;
+
+static void handle_tap(AccelAxisType axis, int32_t direction);
+static void word_init();
+static void splash_deinit();
+static void clear_splash();
+
+static void determine_invert_status()
+{
+	bool invert;
+	bool mode = get_invert_mode_value();
+	
+	if(mode == INVERT_ON_AM)
+	{
+		time_t t = time(NULL);
+		struct tm *local = localtime(&t);
+		invert = (local->tm_hour < 12);
+	}
+	else if(mode == INVERT_ALWAYS)
+	{
+		invert = true;
+	}
+	else
+	{
+		invert = false;
+	}
+	
+	layer_set_frame(inverter_layer_get_layer(inverter), GRect(0, 0, SCREEN_WIDTH, (invert ? SCREEN_HEIGHT : 0)));
+	layer_mark_dirty(inverter_layer_get_layer(inverter));
+}
 
 static void text_layer_setup(Window *window, int which, GRect frame, GFont font) 
 {
@@ -107,7 +167,7 @@ static void text_layer_setup(Window *window, int which, GRect frame, GFont font)
 	text_layer_set_text_color(layers[which], GColorWhite);
 	text_layer_set_background_color(layers[which], GColorClear);
 	text_layer_set_font(layers[which], font);
-	layer_add_child(window_get_root_layer(window), text_layer_get_layer(layers[which]));
+	layer_insert_below_sibling(text_layer_get_layer(layers[which]), inverter_layer_get_layer(inverter));
 }
 
 /** Draw a box in a corner to indicate the number of minutes past the five.
@@ -151,6 +211,30 @@ static void word_mark(int which, int on)
 	text_layer_set_font(layer, on ? font_on : font_off);
 }
 
+static void splash_mark(int which, int on) 
+{
+	TextLayer * const layer = splash_layers[which];
+	const word_t * const w = &splash[which];
+
+	text_layer_set_text(layer, on ? w->text_on : w->text_off);
+	text_layer_set_font(layer, on ? font_on : font_off);
+}
+
+/** Called once per minute.
+ *
+0-4 "IT IS X OCLOCK"
+5-9 "IT IS FIVE PAST X"
+10-14 "IT IS TEN PAST X"
+15-19 "IT IS A QUARTER PAST X"
+20-24 "IT IS TWENTY PAST X"
+25-29 "IT IS TWENTY FIVE PAST X"
+30-34 "IT IS HALF PAST X"
+35-39 "IT IS TWENTY FIVE TO X+1"
+40-44 "IT IS TWENTY TO X+1"
+45-49 "IT IS A QUARTER TO X+1"
+50-54 "IT IS TEN TO X+1"
+55-59 "IT IS FIVE TO X+1"
+ */
 static void display_time()
 {
 	time_t t = time(NULL);
@@ -233,17 +317,10 @@ static void display_time()
 	// update the minute box
 	minute_num = min % 5;
 	layer_set_hidden(minute_layer, false);
-	layer_mark_dirty(minute_layer);
 
 	// Convert from 24-hour to 12-hour time
-	if (hour == 0) 
-	{
-		hour = 12;
-	}
-	else if (hour > 12) 
-	{
-		hour -= 12;
-	}
+	if (hour == 0) hour = 12;
+	else if (hour > 12) hour -= 12;
 
 	word_mark(hour, 1);
 }
@@ -271,10 +348,7 @@ static void clear_words()
 	word_mark(LAYER_BATTERY_75, 0);
 	word_mark(LAYER_BATTERY_100, 0);
 	
-	for (int i = 1 ; i <= 12 ; i++) 
-	{
-		word_mark(i, 0);
-	}
+	for (int i = 1 ; i <= 12 ; i++) word_mark(i, 0);
 }
 
 static void display_stat()
@@ -283,68 +357,53 @@ static void display_stat()
 	word_mark(LAYER_BT, 1);
 	word_mark(LAYER_IS, 1);
 	
-	if(bt == true)
-	{
-		word_mark(LAYER_BT_ON, 1);
-	}
-	else
-	{
-		word_mark(LAYER_BT_OFF, 1);
-	}
+	if(bt == true) word_mark(LAYER_BT_ON, 1);
+	else word_mark(LAYER_BT_OFF, 1);
 	
 	BatteryChargeState batt = battery_state_service_peek();
 	uint8_t charge = batt.charge_percent;
-	if(charge >= 75)
-	{
-		word_mark(LAYER_BATTERY_100, 1);
-	}
-		
-	if(batt.charge_percent >= 50)
-	{
-		word_mark(LAYER_BATTERY_75, 1);
-	}
 	
-	if(batt.charge_percent >= 25)
-	{
-		word_mark(LAYER_BATTERY_50, 1);
-	}
+	if(charge >= 75) word_mark(LAYER_BATTERY_100, 1);
 	
-	if(batt.charge_percent > 0)
-	{
-		word_mark(LAYER_BATTERY_25, 1);
-	}
+	if(batt.charge_percent >= 50) word_mark(LAYER_BATTERY_75, 1);
+	
+	if(batt.charge_percent >= 25) word_mark(LAYER_BATTERY_50, 1);
+	
+	if(batt.charge_percent > 0) word_mark(LAYER_BATTERY_25, 1);
 }
-
 
 static void handle_timer(void *data)
 {
     app_timer_cancel(timer);
+	determine_invert_status();
 	
-	clear_words();
-	display_time();
-	
-	show_stat = false;
-	is_stat_showing = false;
+	if(is_splash_showing == true)
+	{
+		is_splash_showing = false;
+		clear_splash();
+		timer = app_timer_register(1000, handle_timer, NULL);
+	}
+	else if(is_init_complete == false)
+	{
+		splash_deinit();
+		word_init();
+		
+		is_init_complete = true;
+	}
+	else
+	{
+		clear_words();
+		display_time();
+		
+		show_stat = false;
+		is_stat_showing = false;
+	}
 }
 
-/** Called once per minute.
- *
-0-4 "IT IS X OCLOCK"
-5-9 "IT IS FIVE PAST X"
-10-14 "IT IS TEN PAST X"
-15-19 "IT IS A QUARTER PAST X"
-20-24 "IT IS TWENTY PAST X"
-25-29 "IT IS TWENTY FIVE PAST X"
-30-34 "IT IS HALF PAST X"
-35-39 "IT IS TWENTY FIVE TO X+1"
-40-44 "IT IS TWENTY TO X+1"
-45-49 "IT IS A QUARTER TO X+1"
-50-54 "IT IS TEN TO X+1"
-55-59 "IT IS FIVE TO X+1"
- */
 static void handle_tick(struct tm *tick_time, TimeUnits units_changed) 
 {
-	if(show_stat == true) return;
+	if(show_stat == true || is_init_complete == false) return;
+	if(tick_time->tm_min % 5 == 0) clear_words();
 	
 	timer = app_timer_register(1000, handle_timer, NULL);
 }
@@ -364,7 +423,26 @@ static void word_layer_init(int which)
 
 static void word_layer_deinit(int which) 
 {
+	layer_remove_from_parent(text_layer_get_layer(layers[which]));
 	text_layer_destroy(layers[which]);
+}
+
+static void word_init()
+{
+	for (unsigned i = 0 ; i < WORD_COUNT ; i++) 
+	{
+		word_layer_init(i);
+	}
+	
+	// Create a graphics layer for the entire background
+	minute_layer = layer_create(GRect(0, 0, 144, 168));
+	layer_set_update_proc(minute_layer, minute_layer_update);
+	layer_insert_below_sibling(minute_layer, inverter_layer_get_layer(inverter));
+	
+	display_time();
+	
+	tick_timer_service_subscribe(MINUTE_UNIT, handle_tick);
+	accel_tap_service_subscribe(handle_tap);
 }
 
 static void handle_tap(AccelAxisType axis, int32_t direction)
@@ -374,27 +452,6 @@ static void handle_tap(AccelAxisType axis, int32_t direction)
 	clear_words();
 	display_stat();
 	timer = app_timer_register(3000, handle_timer, NULL);
-}
-	
-static void determine_invert_status(struct tm *tick_time)
-{
-	bool invert;
-	bool mode = get_invert_mode_value();
-	
-	if(mode == INVERT_ON_AM)
-	{
-		invert = (tick_time->tm_hour < 12);
-	}
-	else if(mode == INVERT_ALWAYS)
-	{
-		invert = true;
-	}
-	else
-	{
-		invert = false;
-	}
-	
-	layer_set_frame(inverter_layer_get_layer(inverter), GRect(0, 0, SCREEN_WIDTH, (invert ? SCREEN_HEIGHT : 0)));
 }
 
 static void inverter_deinit()
@@ -409,26 +466,90 @@ static void inverter_init()
 	inverter = inverter_layer_create(GRect(0, 0, SCREEN_WIDTH, 0));
 	layer_add_child(window_get_root_layer(window), inverter_layer_get_layer(inverter));
 	
-	time_t t = time(NULL);
-    struct tm *local = localtime(&t);
-	determine_invert_status(local);
+	determine_invert_status();
 }
 
 static void field_changed(const uint32_t key, const void *old_value, const void *new_value)
 {
 	if(key == CONFIG_KEY_INVERTMODE)
 	{
-		struct tm *local;
-		time_t temp;
-		time(&temp);
-		local = localtime(&temp);
-		determine_invert_status(local);
-		free(local);
+		determine_invert_status();
+	}
+}
+
+static void display_splash()
+{
+	splash_mark(SPLASH_TWEAKED, 1);
+	splash_mark(SPLASH_BY, 1);
+	splash_mark(SPLASH_IHTNC, 1);
+	splash_mark(SPLASH_WORD, 1);
+	splash_mark(SPLASH_SQUARE, 1);
+	splash_mark(SPLASH_C, 1);
+	
+	is_splash_showing = true;
+}
+
+static void clear_splash()
+{
+	splash_mark(SPLASH_TWEAKED, 0);
+	splash_mark(SPLASH_BY, 0);
+	splash_mark(SPLASH_IHTNC, 0);
+	splash_mark(SPLASH_WORD, 0);
+	splash_mark(SPLASH_SQUARE, 0);
+	splash_mark(SPLASH_C, 0);
+}
+
+static void splash_layer_setup(Window *window, int which, GRect frame, GFont font) 
+{
+	splash_layers[which] = text_layer_create(frame);
+	text_layer_set_text(splash_layers[which], "");
+	text_layer_set_text_color(splash_layers[which], GColorWhite);
+	text_layer_set_background_color(splash_layers[which], GColorClear);
+	text_layer_set_font(splash_layers[which], font);
+	layer_insert_below_sibling(text_layer_get_layer(splash_layers[which]), inverter_layer_get_layer(inverter));
+}
+
+static void splash_layer_init(int which) 
+{
+	const word_t * const w = &splash[which];
+
+	GRect frame = GRect(w->col*FONT_W,
+						w->row*FONT_H - 2,
+						strlen(w->text_on)*(FONT_W+4),
+						FONT_H+8);
+
+	splash_layer_setup(window, which, frame, font_off);
+	splash_mark(which, 0); // all are "off" initially
+}
+
+static void splash_layer_deinit(int which) 
+{
+	layer_remove_from_parent(text_layer_get_layer(splash_layers[which]));
+	text_layer_destroy(splash_layers[which]);
+}
+
+static void splash_init()
+{
+	for (unsigned i = 0 ; i < SPLASH_COUNT ; i++) 
+	{
+		splash_layer_init(i);
+	}
+	
+	display_splash();
+	timer = app_timer_register(2000, handle_timer, NULL);
+}
+
+static void splash_deinit()
+{
+	for (unsigned i = 0 ; i < SPLASH_COUNT ; i++) 
+	{
+		splash_layer_deinit(i);
 	}
 }
 
 static void init() 
 {
+	is_init_complete = false;
 	is_stat_showing = false;
 	show_stat = false;
 	
@@ -445,21 +566,8 @@ static void init()
 	font_on = fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_ON_20));
 	font_off = fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_OFF_20));
 
-	for (unsigned i = 0 ; i < WORD_COUNT ; i++) 
-	{
-		word_layer_init(i);
-	}
-
-	// Create a graphics layer for the entire background
-	minute_layer = layer_create(GRect(0, 0, 144, 168));
-	layer_set_update_proc(minute_layer, minute_layer_update);
-	layer_add_child(window_get_root_layer(window), minute_layer);
-
-	tick_timer_service_subscribe(MINUTE_UNIT, handle_tick);
-	
-	accel_tap_service_subscribe(handle_tap);
+	splash_init();
 }
-
 
 static void deinit() 
 {
@@ -484,7 +592,6 @@ static void deinit()
 	fonts_unload_custom_font(font_on);
 	fonts_unload_custom_font(font_off);
 }
-	
 
 int main(void) 
 {
