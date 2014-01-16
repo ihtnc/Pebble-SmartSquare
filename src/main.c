@@ -94,12 +94,12 @@ static const word_t words[] =
 	
 static const word_t splash[] =
 {
-	[SPLASH_TWEAKED] = {  0, 0, "TWEAKED", "tweaked" },
-	[SPLASH_BY] = {  1, 8, "BY", "by" },
-	[SPLASH_IHTNC] = {  3, 3, "IHTNC", "ihtnc" },
-	[SPLASH_WORD] = {  6, 7, "SMART", "smart" },
-	[SPLASH_SQUARE] = {  7, 6, "SQUARE", "square" },
-	[SPLASH_C] = {  8, 5, "(c)2014", "(c)2014" },
+	[SPLASH_TWEAKED] = {  0, 0, "TWEAKED", "itbthis" },
+	[SPLASH_BY] = {  1, 8, "BY", "en" },
+	[SPLASH_IHTNC] = {  3, 3, "IHTNC", "fhpas" },
+	[SPLASH_WORD] = {  6, 7, "SMART", "leven" },
+	[SPLASH_SQUARE] = {  7, 6, "SQUARE", "enfive" },
+	[SPLASH_C] = {  8, 5, "(c)2014", "xoclock" },
 		
 	// Fillers
 	[SPLASH_FILLER] =
@@ -108,7 +108,7 @@ static const word_t splash[] =
 	{  1, 10, "ON", "on" },
 	{  2, 0, "TWENTYRFIVEX", "twentyrfivex" },
 	{  3, 0, "HAL", "hal" },
-	{  3, 8, "TTO", "tto" },
+	{  3, 8, "TTOX", "ttox" },
 	{  4, 0, "NINETENFOURX", "ninetenfourx" },
 	{  5, 0, "EIGHTTWELVEX", "eighttwelvex" },
 	{  6, 0, "ONESIXE", "onesixe" },
@@ -139,7 +139,7 @@ static void clear_splash();
 static void determine_invert_status()
 {
 	bool invert;
-	bool mode = get_invert_mode_value();
+	int mode = get_invert_mode_value();
 	
 	if(mode == INVERT_ON_AM)
 	{
