@@ -6,165 +6,101 @@
 #include "thincfg.h"
 #include "options.h"
 
-static GFont font_on;
-static GFont font_off;
+static GFont font;
 
 /** 
-Phase 1 (no overlap)
   Time:          Status:        Square:        Splash:
   012345678901   012345678901   012345678901   012345678901 
-0 IT.IS...A... 0 .....BT:.OFF 0 IThISBT:AOFF 0 tweaked:AOFF 0  
-1 QUARTERTEN.. 1 ..........ON 1 QUARTERTENON 1 QUARTERTbyON 1  
-2 TWENTY.FIVE. 2 ...........# 2 TWENTYrFIVE# 2 TWENTYRFIVE# 2  
-3 HALF.PASTTO. 3 HALF.PAST..# 3 HALFhPASTTO# 3 HALihtncTTO# 3  
-4 NINETENFOUR. 4 N..E.E..O..# 4 NINETENFOUR# 4 NINETENFOUR# 4  
-5 EIGHTTWELVE. 5 EIGH.TWEL..# 5 EIGHTTWELVE# 5 EIGHTTWELVE# 5  
-6 ONESIXELEVEN 6 O..S.X..E... 6 ONESIXELEVEN 6 ONESIXELword 6  
-7 TWOSEVENFIVE 7 T..S.V..F... 7 TWOSEVENFIVE 7 TWOSEVsquare 7  
-8 THREE.OCLOCK 8 THRE.XOCL... 8 THREExOCLOCK 8 THREE(c)2014 8  
-  012345678901   012345678901   012345678901   012345678901    
-  
-Phase 2 (with overlap)
-  Time:          Status:        Square:        Splash:
-  012345678901   012345678901   012345678901   012345678901 
-0 ITxISxxxAxxx 0 xxxxxBT:xOFF 0 IThISBT:AOFF 0 tweakedtAOFF 0  
-1 QUARTERTENxx 1 xxxxxxxxxxON 1 QUARTERTENON 1 QUARTERTbyON 1  
-2 TWENTYxFIVE# 2 xxxxxxxxxxx# 2 TWENTYsFIVE# 2 TWENTYSFIVE# 2  
-3 HALFxPASTox# 3 HALFxPASTxx# 3 HALFhPASTOn# 3 HALihtncTON# 3  
-4 FOUREIGHTEN# 4 NxxExExxOxx# 4 FOUREIGHTEN# 4 FOUREIGHTEN# 4  
-5 THREExTWONE# 5 EIGHxTWELxx# 5 THREEpTWONE# 5 THREEPTWONE# 5  
-6 TWELVExxSIX# 6 OxxSxXxxExx# 6 TWELVEntSIX# 6 TWELVENword# 6  
-7 FIVELEVENINE 7 TxxSxVxxFxxx 7 FIVELEVENINE 7 FIVELEsquare 7  
-8 SEVENxOCLOCK 8 THRExXOCLxxx 8 SEVENtOCLOCK 8 SEVEN(C)2014 8  
+0 ALASUNADIYES 0 ............ 0 ALASUNADIYES 0 tweakedDIYES 0  
+1 DOSEKWATRO.. 1 .........OFF 1 DOSEKWATROFF 1 DOSEKWARbyFF 1  
+2 SINGKOTSONSE 2 ........ON.. 2 SINGKOTSONSE 2 SINGKOTSONSE 2  
+3 TRESAISIYETE 3 ...........E 3 TRESAISIYETE 3 TREihtncYETE 3  
+4 NUWEBE.BENTE 4 ...........E 4 NUWEBEwBENTE 4 NUWEBEWBENTE 4  
+5 DIYESIKWENTA 5 ...........A 5 DIYESIKWENTA 5 DIYESIKWENTA 5  
+6 ....KWARENTA 6 12XX.......A 6 XXXXKWARENTA 6 XXXXKWAsmart 6  
+7 TRENTAKINSEY 7 ............ 7 TRENTAKINSEY 7 TRENTAsquare 7  
+8 SINGKO.MEDYA 8 ............ 8 SINGKOyMEDYA 8 phNGK(c)2014 8  
   012345678901   012345678901   012345678901   012345678901    
 */
 
+static const text_t default_text[] =
+{
+	[DEFAULT_TEXT_1] = { "alasunadiyes" },
+	[DEFAULT_TEXT_2] = { "dosekwatroff" },
+	[DEFAULT_TEXT_3] = { "singkotsonse" },
+	[DEFAULT_TEXT_4] = { "tresaisiyete" },
+	[DEFAULT_TEXT_5] = { "nuwebewbente" },
+	[DEFAULT_TEXT_6] = { "diyesikwenta" },
+	[DEFAULT_TEXT_7] = { "xxxxkwarenta" },
+	[DEFAULT_TEXT_8] = { "trentakinsey" },
+    [DEFAULT_TEXT_9] = { "singkoymedya" },
+};
+
+static text_t current_text[] =
+{
+	[DEFAULT_TEXT_1] = { "alasunadiyes" },
+	[DEFAULT_TEXT_2] = { "dosekwatroff" },
+	[DEFAULT_TEXT_3] = { "singkotsonse" },
+	[DEFAULT_TEXT_4] = { "tresaisiyete" },
+	[DEFAULT_TEXT_5] = { "nuwebewbente" },
+	[DEFAULT_TEXT_6] = { "diyesikwenta" },
+	[DEFAULT_TEXT_7] = { "xxxxkwarenta" },
+	[DEFAULT_TEXT_8] = { "trentakinsey" },
+    [DEFAULT_TEXT_9] = { "singkoymedya" },
+};
+
+#define LAYER_COUNT ((sizeof(default_text) / sizeof(*default_text)))
+	
 static const word_t words[] =
 {
 	// Hours 1-12
-	[LAYER_01_O] = { 6, 0, "O", "o" },
-	[LAYER_01_NE] = { 6, 1, "NE", "ne" },
-		
-	[LAYER_02_T] = { 7, 0, "T", "t" },
-	[LAYER_02_WO] = { 7, 1, "WO", "wo" },
-		
-	[LAYER_03_T] = { 8, 0, "T", "t" },
-	[LAYER_03_HR] = { 8, 1, "HR", "hr" },
-	[LAYER_03_E1] = { 8, 3, "E", "e" },
-	[LAYER_03_E2] = { 8, 4, "E", "e" },
-		
-	[LAYER_04_F] = { 4, 7, "F", "f" },
-	[LAYER_04_O] = { 4, 8, "O", "o" },
-	[LAYER_04_UR] = { 4, 9, "UR", "ur" },
-		
-	[LAYER_05_F] = { 7, 8, "F", "f" }, 
-	[LAYER_05_IVE] = { 7, 9, "IVE", "ive" }, 
-		
-	[LAYER_06_S] = { 6, 3, "S", "s" },
-	[LAYER_06_I] = { 6, 4, "I", "i" },
-	[LAYER_06_X] = { 6, 5, "X", "x" },
-		
-	[LAYER_07_S] = { 7, 3, "S", "s" },
-	[LAYER_07_E] = { 7, 4, "E", "e" },
-	[LAYER_07_V] = { 7, 5, "V", "v" },
-	[LAYER_07_EN] = { 7, 6, "EN", "en" },
-		
-	[LAYER_08_E] = { 5, 0, "E", "e" },
-	[LAYER_08_IG] = { 5, 1, "IG", "ig" },
-	[LAYER_08_H] = { 5, 3, "H", "h" },
-	[LAYER_08_T] = { 5, 4, "T", "t" },
-		
-	[LAYER_09_NI] = { 4, 0, "NI", "ni" },
-	[LAYER_09_N] = { 4, 2, "N", "n" },
-	[LAYER_09_E] = { 4, 3, "E", "e" },
-		
-	[LAYER_10_T] = { 4, 4, "T", "t" },
-	[LAYER_10_E] = { 4, 5, "E", "e" },
-	[LAYER_10_N] = { 4, 6, "N", "n" },
-		
-	[LAYER_11_EL] = { 6, 6, "EL", "el" },
-	[LAYER_11_E] = { 6, 8, "E", "e" },
-	[LAYER_11_VEN] = { 6, 9, "VEN", "ven" },
-		
-	[LAYER_12_T] = { 5, 5, "T", "t" },
-	[LAYER_12_WE] = { 5, 6, "WE", "we" },
-	[LAYER_12_L] = { 5, 8, "L", "l" },
-	[LAYER_12_VE] = { 5, 9, "VE", "ve" },
-
+	[LAYER_H_01] = { 0, 4, "UNA" },
+	[LAYER_H_02] = { 1, 0, "DOS" },
+	[LAYER_H_03] = { 3, 0, "TRES" },
+	[LAYER_H_04] = { 1, 4, "KWATRO" },
+	[LAYER_H_05] = { 2, 0, "SINGKO" },
+	[LAYER_H_06] = { 3, 3, "SAIS" },
+	[LAYER_H_07] = { 3, 6, "SIYETE" },
+	[LAYER_H_08] = { 2, 5, "OTSO" },
+	[LAYER_H_09] = { 4, 0, "NUWEBE" },
+	[LAYER_H_10] = { 0, 7, "DIYES" },
+	[LAYER_H_11] = { 2, 8, "ONSE" },
+	[LAYER_H_12] = { 1, 0, "DOSE" },
+	
 	// Minutes
-	[LAYER_FIVE]	= {  2, 7, "FIVE", "five" }, 
-	[LAYER_TEN]	= {  1, 7, "TEN", "ten" }, 
-	[LAYER_A]	= {  0, 8, "A", "a" },
-	[LAYER_QUARTER]	= {  1, 0, "QUARTER", "quarter" },
-	[LAYER_H] = {  3, 0, "H", "h" },
-	[LAYER_AL] = {  3, 1, "AL", "al" },
-	[LAYER_F] = {  3, 3, "F", "f" },
-	[LAYER_TWENTY]	= {  2, 0, "TWENTY", "twenty" },
+	[LAYER_M_05] = { 8, 0, "SINGKO" },
+	[LAYER_M_10] = { 5, 0, "DIYES" },
+	[LAYER_M_15] = { 7, 6, "KINSE" },
+	[LAYER_M_20] = { 4, 7, "BENTE" },
+	[LAYER_M_30] = { 8, 7, "MEDYA" },
+	[LAYER_M_35] = { 7, 0, "TRENTA" },
+	[LAYER_M_40] = { 6, 4, "KWARENTA" },
+	[LAYER_M_50] = { 5, 4, "SIKWENTA" },
 
-	// Relative
-	[LAYER_IT] = {  0, 0, "IT", "it" },
-	[LAYER_IS]	= {  0, 3, "IS", "is" },
-	[LAYER_TO]	= {  3, 9, "TO", "to", },
+	[LAYER_ALA] = { 0, 0, "ALA" },
+	[LAYER_ALAS] = { 0, 0, "ALAS" },
+	[LAYER_Y] = { 7, 11, "Y" },
 	
-	[LAYER_P] = {  3, 5, "P", "p" },
-	[LAYER_AS] = {  3, 6, "AS", "as" },
-	[LAYER_T] = {  3, 8, "T", "t" },
+	[LAYER_BT_OFF] = { 1, 9, "OFF" },
+	[LAYER_BT_ON] = { 2, 8, "ON" },
 	
-	[LAYER_OC]	= {  8, 6, "OC", "oc" },
-	[LAYER_L]	= {  8, 8, "L", "l" },
-	[LAYER_OCK]	= {  8, 9, "OCK", "ock" },
-
-	// Status: BT	
-	[LAYER_BT] = {  0, 5, "BT:", "bt:" },
-	[LAYER_BT_ON] = {  1, 10, "ON", "on" },
-	[LAYER_BT_OFF] = {  0, 9, "OFF", "off" },
+	[LAYER_BATTERY_25] = { 6, 11, "A" },
+	[LAYER_BATTERY_50] = { 5, 11, "A" },
+	[LAYER_BATTERY_75] = { 4, 11, "E" },
+	[LAYER_BATTERY_100] = { 3, 11, "E" },
 	
-	// Status: Battery	
-	[LAYER_BATTERY_25] = {  5, 11, "X", "x" },
-	[LAYER_BATTERY_50] = {  4, 11, "X", "x" },
-	[LAYER_BATTERY_75] = {  3, 11, "X", "x" },
-	[LAYER_BATTERY_100] = {  2, 11, "X", "x" },
-	
-	[LAYER_FILLER_X] = {  8, 5, "X", "x" },
+	[LAYER_DAY] = { 6, 0, "XX" },
 		
-	// Fillers
-	[LAYER_FILLER] =
-	{  0, 2, "h", "h" },
-	{  2, 6, "r", "r" },
-	{  3, 4, "h", "h" },
+	[SPLASH_TWEAKED] = {  0, 0, "TWEAKED" },
+	[SPLASH_BY] = {  1, 8, "BY" },
+	[SPLASH_IHTNC] = {  3, 3, "IHTNC" },
+	[SPLASH_SMART] = {  6, 7, "SMART" },
+	[SPLASH_SQUARE] = {  7, 6, "SQUARE" },
+	[SPLASH_C] = {  8, 0, "PHngk(C)2014" },
 };
-
-#define WORD_COUNT ((sizeof(words) / sizeof(*words)))
-	
-static const word_t splash[] =
-{
-	[SPLASH_TWEAKED] = {  0, 0, "TWEAKED", "ithisbt" },
-	[SPLASH_BY] = {  1, 8, "BY", "en" },
-	[SPLASH_IHTNC] = {  3, 3, "IHTNC", "fhpas" },
-	[SPLASH_WORD] = {  6, 7, "SMART", "leven" },
-	[SPLASH_SQUARE] = {  7, 6, "SQUARE", "enfive" },
-	[SPLASH_C] = {  8, 5, "(c)2014", "xoclock" },
-		
-	// Fillers
-	[SPLASH_FILLER] =
-	{  0, 7, ":AOFF", ":aoff" },
-	{  1, 0, "QUARTERT", "quartert" },
-	{  1, 10, "ON", "on" },
-	{  2, 0, "TWENTYRFIVEX", "twentyrfivex" },
-	{  3, 0, "HAL", "hal" },
-	{  3, 8, "TTOX", "ttox" },
-	{  4, 0, "NINETENFOURX", "ninetenfourx" },
-	{  5, 0, "EIGHTTWELVEX", "eighttwelvex" },
-	{  6, 0, "ONESIXE", "onesixe" },
-	{  7, 0, "TWOSEV", "twosev" },
-	{  8, 0, "THREE", "three" },
-};
-
-#define SPLASH_COUNT ((sizeof(splash) / sizeof(*splash)))
 	
 static Window *window;
-static TextLayer *layers[WORD_COUNT];
-static TextLayer *splash_layers[SPLASH_COUNT];
+static TextLayer *layers[LAYER_COUNT];
 static Layer *minute_layer;
 static int minute_num;
 static InverterLayer *inverter;
@@ -179,11 +115,12 @@ static AppTimer *timer;
 
 static int8_t current_day;
 
-static void handle_timer(void *data);
-static void handle_tap(AccelAxisType axis, int32_t direction);
-static void word_init();
+static void reset_words();
+static void display_stat();
+static void refresh_layers();
+static void face_init();
 static void splash_deinit();
-static void clear_splash();
+static void handle_timer(void *data);
 
 static void determine_invert_status()
 {
@@ -207,16 +144,6 @@ static void determine_invert_status()
 	
 	layer_set_frame(inverter_layer_get_layer(inverter), GRect(0, 0, SCREEN_WIDTH, (invert ? SCREEN_HEIGHT : 0)));
 	layer_mark_dirty(inverter_layer_get_layer(inverter));
-}
-
-static void text_layer_setup(Window *window, int which, GRect frame, GFont font) 
-{
-	layers[which] = text_layer_create(frame);
-	text_layer_set_text(layers[which], "");
-	text_layer_set_text_color(layers[which], GColorWhite);
-	text_layer_set_background_color(layers[which], GColorClear);
-	text_layer_set_font(layers[which], font);
-	layer_insert_below_sibling(text_layer_get_layer(layers[which]), inverter_layer_get_layer(inverter));
 }
 
 /** Draw a box in a corner to indicate the number of minutes past the five.
@@ -251,38 +178,59 @@ static void minute_layer_update(Layer * const me,  GContext *ctx)
 	graphics_fill_rect(ctx, r, 1, GCornersAll);
 }
 
-static void word_mark(int which, int on) 
+static void handle_tap(AccelAxisType axis, int32_t direction)
 {
-	TextLayer * const layer = layers[which];
-	const word_t * const w = &words[which];
-
-	text_layer_set_text(layer, on ? w->text_on : w->text_off);
-	text_layer_set_font(layer, on ? font_on : font_off);
+	if(is_stat_showing == true) return;
+	
+	reset_words();
+	display_stat();
+	refresh_layers();
 }
 
-static void splash_mark(int which, int on) 
+static void field_changed(const uint32_t key, const void *old_value, const void *new_value)
 {
-	TextLayer * const layer = splash_layers[which];
-	const word_t * const w = &splash[which];
+	if(key == CONFIG_KEY_INVERTMODE)
+	{
+		determine_invert_status();
+	}
+}
 
-	text_layer_set_text(layer, on ? w->text_on : w->text_off);
-	text_layer_set_font(layer, on ? font_on : font_off);
+static void replace_text(int word_index) 
+{
+	const word_t *const w = &words[word_index];
+	text_t *cur_t = &current_text[w->row];
+		
+	for(int i = 0; i < (int)strlen(w->text); i++)
+	{
+		cur_t->text[w->col + i] = w->text[i];
+	}	
+}
+
+static void replace_day(int day) 
+{
+	if(day < 1 || day > 31) return;
+	
+	const word_t *const w = &words[LAYER_DAY];
+	text_t *cur_t = &current_text[w->row];
+	
+	cur_t->text[w->col] = '0' + (day / 10);
+	cur_t->text[w->col + 1] = '0' + (day % 10);
 }
 
 /** Called once per minute.
  *
-0-4 "IT IS X OCLOCK"
-5-9 "IT IS FIVE PAST X"
-10-14 "IT IS TEN PAST X"
-15-19 "IT IS A QUARTER PAST X"
-20-24 "IT IS TWENTY PAST X"
-25-29 "IT IS TWENTY FIVE PAST X"
-30-34 "IT IS HALF PAST X"
-35-39 "IT IS TWENTY FIVE TO X+1"
-40-44 "IT IS TWENTY TO X+1"
-45-49 "IT IS A QUARTER TO X+1"
-50-54 "IT IS TEN TO X+1"
-55-59 "IT IS FIVE TO X+1"
+0-4 "ALA/ALAS X"
+5-9 "ALA/ALAS X SINGKO"
+10-14 "ALA/ALAS X DIYES"
+15-19 "ALA/ALAS X KINSE"
+20-24 "ALA/ALAS X BENTE"
+25-29 "ALA/ALAS X BENTE SINGKO"
+30-34 "ALA/ALAS X Y MEDYA"
+35-39 "ALA/ALAS X TRENTA Y SINGKO"
+40-44 "ALA/ALAS X KWARENTA"
+45-49 "ALA/ALAS X KWARENTA Y SINGKO"
+50-54 "ALA/ALAS X SIKWENTA"
+55-59 "ALA/ALAS X SIKWENTA Y SINGKO"
  */
 static void display_time()
 {
@@ -293,194 +241,99 @@ static void display_time()
 	
 	current_day = local->tm_mday;
 	
-	word_mark(LAYER_IT, 1);
-	word_mark(LAYER_IS, 1);
-	
-	if (min < 5) 
+	if(min < 5)
 	{
-		word_mark(LAYER_OC, 1);
-		word_mark(LAYER_L, 1);
-		word_mark(LAYER_OCK, 1);
+		//do nothing since this would be covered on the hour part 
 	}
 	else if (min < 10) 
 	{
-		word_mark(LAYER_FIVE, 1);
-		word_mark(LAYER_P, 1);
-		word_mark(LAYER_AS, 1);
-		word_mark(LAYER_T, 1);
+		replace_text(LAYER_M_05);
 	}
 	else if (min < 15) 
 	{
-		word_mark(LAYER_TEN, 1);
-		word_mark(LAYER_P, 1);
-		word_mark(LAYER_AS, 1);
-		word_mark(LAYER_T, 1);
+		replace_text(LAYER_M_10);
 	}
 	else if (min < 20) 
 	{
-		word_mark(LAYER_A, 1);
-		word_mark(LAYER_QUARTER, 1);
-		word_mark(LAYER_P, 1);
-		word_mark(LAYER_AS, 1);
-		word_mark(LAYER_T, 1);
+		replace_text(LAYER_M_15);
 	}
 	else if (min < 25) 
 	{
-		word_mark(LAYER_TWENTY, 1);
-		word_mark(LAYER_P, 1);
-		word_mark(LAYER_AS, 1);
-		word_mark(LAYER_T, 1);
+		replace_text(LAYER_M_20);
 	}
 	else if (min < 30) 
 	{
-		word_mark(LAYER_TWENTY, 1);
-		word_mark(LAYER_FIVE, 1);
-		word_mark(LAYER_P, 1);
-		word_mark(LAYER_AS, 1);
-		word_mark(LAYER_T, 1);
+		replace_text(LAYER_M_20);
+		replace_text(LAYER_M_05);
 	}
 	else if (min < 35) 
 	{
-		word_mark(LAYER_H, 1);
-		word_mark(LAYER_AL, 1);
-		word_mark(LAYER_F, 1);
-		word_mark(LAYER_P, 1);
-		word_mark(LAYER_AS, 1);
-		word_mark(LAYER_T, 1);
+		replace_text(LAYER_Y);
+		replace_text(LAYER_M_30);
 	}
 	else if (min < 40) 
 	{
-		word_mark(LAYER_TWENTY, 1);
-		word_mark(LAYER_FIVE, 1);
-		word_mark(LAYER_TO, 1);
-		hour++;
+		replace_text(LAYER_M_35);
+		replace_text(LAYER_Y);
+		replace_text(LAYER_M_05);
 	}
 	else if (min < 45) 
 	{
-		word_mark(LAYER_TWENTY, 1);
-		word_mark(LAYER_TO, 1);
-		hour++;
+		replace_text(LAYER_M_40);
 	}
 	else if (min < 50) 
 	{
-		word_mark(LAYER_A, 1);
-		word_mark(LAYER_QUARTER, 1);
-		word_mark(LAYER_TO, 1);
-		hour++;
+		replace_text(LAYER_M_40);
+		replace_text(LAYER_Y);
+		replace_text(LAYER_M_05);
 	}
 	else if (min < 55) 
 	{
-		word_mark(LAYER_TEN, 1);
-		word_mark(LAYER_TO, 1);
-		hour++;
+		replace_text(LAYER_M_50);
 	}
-	else 
+	else
 	{
-		word_mark(LAYER_FIVE, 1);
-		word_mark(LAYER_TO, 1);
-		hour++;
+		replace_text(LAYER_M_50);
+		replace_text(LAYER_Y);
+		replace_text(LAYER_M_05);
 	}
-
-	// update the minute box
-	minute_num = min % 5;
-	layer_set_hidden(minute_layer, false);
 
 	// Convert from 24-hour to 12-hour time
 	if (hour == 0) hour = 12;
 	else if (hour > 12) hour -= 12;
 
-	if (hour == 1) 
+	if (hour == 1) replace_text(LAYER_ALA);
+	else replace_text(LAYER_ALAS);
+		
+	replace_text(hour);
+}
+
+static void reset_text(int index)
+{
+	const text_t *const def_t = &default_text[index];
+	text_t *cur_t = &current_text[index];
+	
+	for(int i = 0; i < (int)strlen(def_t->text); i++) 
 	{
-		word_mark(LAYER_01_O, 1);
-		word_mark(LAYER_01_NE, 1);
-	}
-	else if (hour == 2)
-	{
-		word_mark(LAYER_02_T, 1);
-		word_mark(LAYER_02_WO, 1);
-	}
-	else if (hour == 3)
-	{
-		word_mark(LAYER_03_T, 1);
-		word_mark(LAYER_03_HR, 1);
-		word_mark(LAYER_03_E1, 1);
-		word_mark(LAYER_03_E2, 1);
-	}
-	else if (hour == 4)
-	{
-		word_mark(LAYER_04_F, 1);
-		word_mark(LAYER_04_O, 1);
-		word_mark(LAYER_04_UR, 1);
-	}
-	else if (hour == 5)
-	{
-		word_mark(LAYER_05_F, 1);
-		word_mark(LAYER_05_IVE, 1);
-	}
-	else if (hour == 6)
-	{
-		word_mark(LAYER_06_S, 1);
-		word_mark(LAYER_06_I, 1);
-		word_mark(LAYER_06_X, 1);
-	}
-	else if (hour == 7)
-	{
-		word_mark(LAYER_07_S, 1);
-		word_mark(LAYER_07_E, 1);
-		word_mark(LAYER_07_V, 1);
-		word_mark(LAYER_07_EN, 1);
-	}
-	else if (hour == 8)
-	{
-		word_mark(LAYER_08_E, 1);
-		word_mark(LAYER_08_IG, 1);
-		word_mark(LAYER_08_H, 1);
-		word_mark(LAYER_08_T, 1);
-	}
-	else if (hour == 9)
-	{
-		word_mark(LAYER_09_NI, 1);
-		word_mark(LAYER_09_N, 1);
-		word_mark(LAYER_09_E, 1);
-	}
-	else if (hour == 10)
-	{
-		word_mark(LAYER_10_T, 1);
-		word_mark(LAYER_10_E, 1);
-		word_mark(LAYER_10_N, 1);
-	}
-	else if (hour == 11)
-	{
-		word_mark(LAYER_11_EL, 1);
-		word_mark(LAYER_11_E, 1);
-		word_mark(LAYER_11_VEN, 1);
-	}
-	else if (hour == 12)
-	{
-		word_mark(LAYER_12_T, 1);
-		word_mark(LAYER_12_WE, 1);
-		word_mark(LAYER_12_L, 1);
-		word_mark(LAYER_12_VE, 1);
+		cur_t->text[i] = def_t->text[i];
 	}
 }
 
-static void clear_words()
+static void reset_words()
 {
-	layer_set_hidden(minute_layer, true);
-	
-	for (int i = 0; i < LAYER_FILLER; i++) word_mark(i, 0);
+	for (int i = 0; i < (int)LAYER_COUNT; i++) reset_text(i);
 }
 
 /** Called when watch is tapped or for each animation frame
-.....BT:.OFF
-..........ON
-...........#
-HALF.PAST..#
-N..E.E..O..#
-EIGH.TWEL..#
-O..S.X..E...
-T..S.V..F...
-THRE.XOCL...
+............
+.........OFF
+........ON..
+...........E
+...........E
+...........A
+12XX.......A
+............
+............
 */
 static void display_stat()
 {
@@ -499,138 +352,29 @@ static void display_stat()
 	//otherwise, show increasing charge level at every call
 	if((is_charging == false && charge >= 75)
 	   || (is_charging == true && charging_state == 5)
-	   || (is_charging == true && charging_state == 0)) word_mark(LAYER_BATTERY_100, 1);
+	   || (is_charging == true && charging_state == 0)) replace_text(LAYER_BATTERY_100);
 	
 	if((is_charging == false && charge >= 50)
 	   || (is_charging == true && charging_state == 4)
-	   || (is_charging == true && charging_state == 0)) word_mark(LAYER_BATTERY_75, 1);
+	   || (is_charging == true && charging_state == 0)) replace_text(LAYER_BATTERY_75);
 	
 	if((is_charging == false && charge >= 25)
 	   || (is_charging == true && charging_state == 3)
-	   || (is_charging == true && charging_state == 0)) word_mark(LAYER_BATTERY_50, 1);
+	   || (is_charging == true && charging_state == 0)) replace_text(LAYER_BATTERY_50);
 	
 	if((is_charging == false && charge > 0)
 	   || (is_charging == true && charging_state == 2)
-	   || (is_charging == true && charging_state == 0)) word_mark(LAYER_BATTERY_25, 1);
+	   || (is_charging == true && charging_state == 0)) replace_text(LAYER_BATTERY_25);
 	
-	//at the start of the animation, show bt status
+	//at the start of the animation, show bt status and the day of the month
 	if(charging_state == 0)
 	{
 		bool bt = bluetooth_connection_service_peek();
-		word_mark(LAYER_BT, 1);
-	
-		if(bt == true) word_mark(LAYER_BT_ON, 1);
-		else word_mark(LAYER_BT_OFF, 1);
-	}
-	
-	//at the start of the animation, show the day of the month
-	//highlight parts on the lower left area of the screen to resemble numerals
-	if(charging_state == 0)
-	{
-		uint8_t tens = current_day / 10;
-		uint8_t ones = current_day % 10;
 		
-		if(tens == 1)
-		{
-			word_mark(LAYER_F, 1);
-			word_mark(LAYER_09_E, 1);
-			word_mark(LAYER_08_H, 1);
-			word_mark(LAYER_06_S, 1);
-			word_mark(LAYER_07_S, 1);
-			word_mark(LAYER_03_E1, 1);
-		}
-		else if(tens == 2 || tens == 3)
-		{
-			word_mark(LAYER_H, 1);
-			word_mark(LAYER_AL, 1);
-			word_mark(LAYER_F, 1);
-			
-			word_mark(LAYER_09_E, 1);
-			
-			word_mark(LAYER_08_E, 1);
-			word_mark(LAYER_08_IG, 1);
-			word_mark(LAYER_08_H, 1);
-			
-			if(tens == 2)
-			{
-				word_mark(LAYER_01_O, 1);
-				word_mark(LAYER_02_T, 1);
-			}
-			if(tens == 3)
-			{
-				word_mark(LAYER_06_S, 1);
-				word_mark(LAYER_07_S, 1);
-			}
-			
-			word_mark(LAYER_03_T, 1);
-			word_mark(LAYER_03_HR, 1);
-			word_mark(LAYER_03_E1, 1);
-		}
+		if(bt == true) replace_text(LAYER_BT_ON);
+		else replace_text(LAYER_BT_OFF);
 		
-		if(ones == 1 || ones == 4 || ones == 7)
-		{
-			if(ones == 4 || ones == 7) word_mark(LAYER_P, 1);
-			if(ones == 7) word_mark(LAYER_AS, 1);			
-			word_mark(LAYER_T, 1);
-			
-			if(ones == 4) word_mark(LAYER_10_E, 1);		
-			word_mark(LAYER_04_O, 1);
-			
-			if(ones == 4) 
-			{
-				word_mark(LAYER_12_T, 1);
-				word_mark(LAYER_12_WE, 1);
-			}			
-			word_mark(LAYER_12_L, 1);
-			
-			word_mark(LAYER_11_E, 1);
-			word_mark(LAYER_05_F, 1);
-			
-			word_mark(LAYER_L, 1);
-		}
-		else if(ones == 0 || ones == 2 || ones == 3 
-				|| ones == 5 || ones == 6 || ones == 8 
-				|| ones == 9)
-		{
-			word_mark(LAYER_P, 1);
-			word_mark(LAYER_AS, 1);
-			word_mark(LAYER_T, 1);
-			
-			if(ones == 0 || ones == 5 || ones == 6 
-			   || ones == 8 || ones == 9)
-			{
-				word_mark(LAYER_10_E, 1);
-			}
-			
-			if(ones == 0 || ones == 2 || ones == 3 
-			   || ones == 8 || ones == 9)
-			{
-				word_mark(LAYER_04_O, 1);
-			}
-			
-			word_mark(LAYER_12_T, 1);
-			if (ones == 2 || ones == 3 || ones == 5 
-				|| ones == 6 || ones == 8 || ones == 9) word_mark(LAYER_12_WE, 1);
-			word_mark(LAYER_12_L, 1);
-			
-			if(ones == 0 ||ones == 2 || ones == 6 
-			   || ones == 8)
-			{
-				word_mark(LAYER_06_X, 1);
-				word_mark(LAYER_07_V, 1);
-			}
-			
-			if(ones == 0 || ones == 3 || ones == 5 
-			   || ones == 6 || ones == 8 || ones == 9)
-			{
-				word_mark(LAYER_11_E, 1);
-				word_mark(LAYER_05_F, 1);
-			}
-			
-			word_mark(LAYER_FILLER_X, 1);
-			word_mark(LAYER_OC, 1);
-			word_mark(LAYER_L, 1);
-		}
+		replace_day(current_day);
 	}
 	
 	if(is_charging == true) timer = app_timer_register(250, handle_timer, NULL);
@@ -638,7 +382,7 @@ static void display_stat()
 }
 
 static void handle_timer(void *data)
-{
+{	
     app_timer_cancel(timer);
 	determine_invert_status();
 	
@@ -647,15 +391,16 @@ static void handle_timer(void *data)
 		//this condition is called after the splash screen is shown
 		//this clears the screen and starts the timer for initializing the actual watchface
 		is_splash_showing = false;
-		clear_splash();
+		
+		splash_deinit();
+		
 		timer = app_timer_register(750, handle_timer, NULL);
 	}
 	else if(is_init_complete == false)
 	{
 		//this condition is called after the splash screen has been cleared
 		//this initializes the watchface
-		splash_deinit();
-		word_init();
+		face_init();
 		
 		is_init_complete = true;
 	}
@@ -664,14 +409,17 @@ static void handle_timer(void *data)
 		//this condition is called when the status screen is animating
 		charging_state++;
 		display_stat();
+		refresh_layers();
 	}
 	else
 	{
 		//this condition is called after the status screen has been shown
 		//this always shows the current time
-		clear_words();
+		reset_words();
 		display_time();
-		
+		refresh_layers();
+		layer_mark_dirty(minute_layer);
+				
 		show_stat = false;
 		is_stat_showing = false;
 		is_charging = false;
@@ -686,53 +434,55 @@ static void handle_tick(struct tm *tick_time, TimeUnits units_changed)
 	
 	//every five minutes, the screen will clear
 	//and be updated with the current time eventually
-	if(tick_time->tm_min % 5 == 0) clear_words();
-	timer = app_timer_register(750, handle_timer, NULL);
-}
-
-static void word_layer_init(int which) 
-{
-	const word_t * const w = &words[which];
-
-	GRect frame = GRect(w->col*FONT_W,
-						w->row*FONT_H - 2,
-						strlen(w->text_on)*(FONT_W+4),
-						FONT_H+8);
-
-	text_layer_setup(window, which, frame, font_off);
-	word_mark(which, 0); // all are "off" initially
-}
-
-static void word_layer_deinit(int which) 
-{
-	layer_remove_from_parent(text_layer_get_layer(layers[which]));
-	text_layer_destroy(layers[which]);
-}
-
-static void word_init()
-{
-	for (unsigned i = 0 ; i < WORD_COUNT ; i++) 
+	if(tick_time->tm_min % 5 == 0) 
 	{
-		word_layer_init(i);
+		reset_words();
+		refresh_layers();
+		timer = app_timer_register(750, handle_timer, NULL);
 	}
+	else
+	{
+		layer_mark_dirty(minute_layer);
+	}
+}
+
+static void layer_refresh(int index)
+{
+	const text_t *const cur_t = &current_text[index];
 	
+	text_layer_set_text(layers[index], cur_t->text);
+	layer_mark_dirty(text_layer_get_layer(layers[index]));
+}
+
+static void refresh_layers()
+{
+	for (unsigned i = 0 ; i < LAYER_COUNT ; i++) 
+	{
+		layer_refresh(i);
+	}
+}
+
+static void face_deinit()
+{	
+	tick_timer_service_unsubscribe();
+	accel_tap_service_unsubscribe();
+	
+	layer_destroy(minute_layer);
+}
+
+static void face_init()
+{	
 	// Create a graphics layer for the entire background
 	minute_layer = layer_create(GRect(0, 0, 144, 168));
 	layer_set_update_proc(minute_layer, minute_layer_update);
 	layer_insert_below_sibling(minute_layer, inverter_layer_get_layer(inverter));
 	
+	reset_words();
 	display_time();
+	refresh_layers();
 	
 	tick_timer_service_subscribe(MINUTE_UNIT, handle_tick);
 	accel_tap_service_subscribe(handle_tap);
-}
-
-static void handle_tap(AccelAxisType axis, int32_t direction)
-{
-	if(is_stat_showing == true) return;
-	
-	clear_words();
-	display_stat();
 }
 
 static void inverter_deinit()
@@ -750,82 +500,79 @@ static void inverter_init()
 	determine_invert_status();
 }
 
-static void field_changed(const uint32_t key, const void *old_value, const void *new_value)
-{
-	if(key == CONFIG_KEY_INVERTMODE)
-	{
-		determine_invert_status();
-	}
-}
-
 static void display_splash()
 {
-	splash_mark(SPLASH_TWEAKED, 1);
-	splash_mark(SPLASH_BY, 1);
-	splash_mark(SPLASH_IHTNC, 1);
-	splash_mark(SPLASH_WORD, 1);
-	splash_mark(SPLASH_SQUARE, 1);
-	splash_mark(SPLASH_C, 1);
+	replace_text(SPLASH_TWEAKED);
+	replace_text(SPLASH_BY);
+	replace_text(SPLASH_IHTNC);
+	replace_text(SPLASH_SMART);
+	replace_text(SPLASH_SQUARE);
+	replace_text(SPLASH_C);
+	
+	refresh_layers();
 	
 	is_splash_showing = true;
 }
 
-static void clear_splash()
-{
-	splash_mark(SPLASH_TWEAKED, 0);
-	splash_mark(SPLASH_BY, 0);
-	splash_mark(SPLASH_IHTNC, 0);
-	splash_mark(SPLASH_WORD, 0);
-	splash_mark(SPLASH_SQUARE, 0);
-	splash_mark(SPLASH_C, 0);
-}
-
-static void splash_layer_setup(Window *window, int which, GRect frame, GFont font) 
-{
-	splash_layers[which] = text_layer_create(frame);
-	text_layer_set_text(splash_layers[which], "");
-	text_layer_set_text_color(splash_layers[which], GColorWhite);
-	text_layer_set_background_color(splash_layers[which], GColorClear);
-	text_layer_set_font(splash_layers[which], font);
-	layer_insert_below_sibling(text_layer_get_layer(splash_layers[which]), inverter_layer_get_layer(inverter));
-}
-
-static void splash_layer_init(int which) 
-{
-	const word_t * const w = &splash[which];
-
-	GRect frame = GRect(w->col*FONT_W,
-						w->row*FONT_H - 2,
-						strlen(w->text_on)*(FONT_W+4),
-						FONT_H+8);
-
-	splash_layer_setup(window, which, frame, font_off);
-	splash_mark(which, 0); // all are "off" initially
-}
-
-static void splash_layer_deinit(int which) 
-{
-	layer_remove_from_parent(text_layer_get_layer(splash_layers[which]));
-	text_layer_destroy(splash_layers[which]);
+static void splash_deinit()
+{	
+	reset_words();
+	refresh_layers();
 }
 
 static void splash_init()
 {
-	for (unsigned i = 0 ; i < SPLASH_COUNT ; i++) 
-	{
-		splash_layer_init(i);
-	}
-	
 	display_splash();
+	
+	static char *xcur = "123456789012_";
+	snprintf(xcur, strlen(xcur), "%s", "splash_init");
+	APP_LOG(APP_LOG_LEVEL_DEBUG, xcur);
+	
 	timer = app_timer_register(2250, handle_timer, NULL);
 }
 
-static void splash_deinit()
+static void layer_deinit(int index)
 {
-	for (unsigned i = 0 ; i < SPLASH_COUNT ; i++) 
+	layer_remove_from_parent(text_layer_get_layer(layers[index]));
+	text_layer_destroy(layers[index]);
+}
+
+static void layer_init(int index) 
+{	
+	GRect frame = GRect(0, index*FONT_H - 2,
+						12*(FONT_W+4), FONT_H+8);
+	layers[index] = text_layer_create(frame);
+	
+	text_layer_set_text(layers[index], "");
+	text_layer_set_text_color(layers[index], GColorWhite);
+	text_layer_set_background_color(layers[index], GColorClear);
+	text_layer_set_font(layers[index], font);
+	
+	layer_insert_below_sibling(text_layer_get_layer(layers[index]), inverter_layer_get_layer(inverter));
+	
+	reset_text(index);
+	layer_refresh(index);
+}
+
+static void deinit() 
+{
+	app_timer_cancel(timer);
+    free(timer); 
+	
+	face_deinit();
+	
+	for (unsigned i = 0 ; i < LAYER_COUNT ; i++) 
 	{
-		splash_layer_deinit(i);
+		layer_deinit(i);
 	}
+	
+	btmonitor_deinit();
+    inverter_deinit();
+	thincfg_deinit();
+		
+	window_destroy(window);
+	
+	fonts_unload_custom_font(font);
 }
 
 static void init() 
@@ -846,34 +593,14 @@ static void init()
 	inverter_init();
 	btmonitor_init(get_bt_notification_value());
 	
-	font_on = fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_ON_20));
-	font_off = fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_OFF_20));
+	font = fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_SOURCE_20));
 
-	splash_init();
-}
-
-static void deinit() 
-{
-	accel_tap_service_unsubscribe();
-	
-	app_timer_cancel(timer);
-    free(timer); 
-	
-	btmonitor_deinit();
-    inverter_deinit();
-		
-	tick_timer_service_unsubscribe();
-	layer_destroy(minute_layer);
-	
-	for (unsigned i = 0 ; i < WORD_COUNT ; i++) 
+	for (unsigned i = 0 ; i < LAYER_COUNT ; i++) 
 	{
-		word_layer_deinit(i);
+		layer_init(i);
 	}
 	
-	window_destroy(window);
-	
-	fonts_unload_custom_font(font_on);
-	fonts_unload_custom_font(font_off);
+	splash_init();
 }
 
 int main(void) 

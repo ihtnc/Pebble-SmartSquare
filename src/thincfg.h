@@ -12,9 +12,9 @@
 
 enum 
 {
-        CONFIG_KEY_INVERTMODE = 29050,
-        CONFIG_KEY_BTNOTIFICATION = 29051,
-        CONFIG_KEY_ACTION = 29052
+        CONFIG_KEY_INVERTMODE = 29060,
+        CONFIG_KEY_BTNOTIFICATION = 29061,
+        CONFIG_KEY_ACTION = 29062
 };
 
 typedef void(*ThinCFGFieldChangedHandler)(const uint32_t key, const void *old_value, const void *new_value);

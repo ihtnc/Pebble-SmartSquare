@@ -1,17 +1,17 @@
 {
     "versionLabel": "1.0",
-    "uuid": "37cfdbd6-4a8d-44c5-a456-4ed9a142c2c2",
+    "uuid": "118f5109-fd25-49fb-bace-25f49bbf90f2",
     "appKeys": {
-        "Action": 29052,
-        "BTNotification": 29051,
-        "InvertMode": 29050
+        "Action": 29062,
+        "BTNotification": 29061,
+        "InvertMode": 29060
     },
-    "longName": "Pebble-SmartSquare",
-    "versionCode": 3,
+    "longName": "Pebble-SmartSquare-ph_PH",
+    "versionCode": 1,
     "capabilities": [
         "configurable"
     ],
-    "shortName": "SmartSquare",
+    "shortName": "SmartSquare-ph_PH",
     "companyName": "ihopethisnamecounts",
     "watchapp": {
         "watchface": true
@@ -19,14 +19,10 @@
     "resources": {
         "media": [
             {
+                "characterRegex": "[A-Za-z0-9\\(\\)]",
                 "type": "font",
-                "name": "FONT_ON_20",
-                "file": "fonts/SourceCodePro-Black.otf"
-            },
-            {
-                "type": "font",
-                "name": "FONT_OFF_20",
-                "file": "fonts/SourceCodePro-Light.otf"
+                "name": "FONT_SOURCE_20",
+                "file": "fonts/SourceCodePro-mod.ttf"
             },
             {
                 "menuIcon": true,
