@@ -89,7 +89,7 @@
 #define SPLASH_TWEAKED	0
 #define SPLASH_BY		1
 #define SPLASH_IHTNC	2
-#define SPLASH_WORD		3
+#define SPLASH_SMART	3
 #define SPLASH_SQUARE	4
 #define SPLASH_C		5
 #define SPLASH_FILLER	6

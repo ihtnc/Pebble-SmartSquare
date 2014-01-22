@@ -141,7 +141,7 @@ static const word_t splash[] =
 	[SPLASH_TWEAKED] = {  0, 0, "TWEAKED", "ithisbt" },
 	[SPLASH_BY] = {  1, 8, "BY", "en" },
 	[SPLASH_IHTNC] = {  3, 3, "IHTNC", "fhpas" },
-	[SPLASH_WORD] = {  6, 7, "SMART", "leven" },
+	[SPLASH_SMART] = {  6, 7, "SMART", "leven" },
 	[SPLASH_SQUARE] = {  7, 6, "SQUARE", "enfive" },
 	[SPLASH_C] = {  8, 5, "(c)2014", "xoclock" },
 		
@@ -763,7 +763,7 @@ static void display_splash()
 	splash_mark(SPLASH_TWEAKED, 1);
 	splash_mark(SPLASH_BY, 1);
 	splash_mark(SPLASH_IHTNC, 1);
-	splash_mark(SPLASH_WORD, 1);
+	splash_mark(SPLASH_SMART, 1);
 	splash_mark(SPLASH_SQUARE, 1);
 	splash_mark(SPLASH_C, 1);
 	
@@ -775,7 +775,7 @@ static void clear_splash()
 	splash_mark(SPLASH_TWEAKED, 0);
 	splash_mark(SPLASH_BY, 0);
 	splash_mark(SPLASH_IHTNC, 0);
-	splash_mark(SPLASH_WORD, 0);
+	splash_mark(SPLASH_SMART, 0);
 	splash_mark(SPLASH_SQUARE, 0);
 	splash_mark(SPLASH_C, 0);
 }
