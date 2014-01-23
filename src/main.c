@@ -89,6 +89,11 @@ static const word_t words[] =
 	[LAYER_BATTERY_75] = { 4, 11, "E" },
 	[LAYER_BATTERY_100] = { 3, 11, "E" },
 	
+	[LAYER_BATTERY_25_OFF] = { 6, 11, "a" },
+	[LAYER_BATTERY_50_OFF] = { 5, 11, "a" },
+	[LAYER_BATTERY_75_OFF] = { 4, 11, "e" },
+	[LAYER_BATTERY_100_OFF] = { 3, 11, "e" },
+	
 	[LAYER_DAY] = { 6, 0, "XX" },
 		
 	[SPLASH_TWEAKED] = {  0, 0, "TWEAKED" },
@@ -348,6 +353,11 @@ static void display_stat()
 		charge = batt.charge_percent;
 	}
 	
+	replace_text(LAYER_BATTERY_100_OFF);
+	replace_text(LAYER_BATTERY_75_OFF);
+	replace_text(LAYER_BATTERY_50_OFF);
+	replace_text(LAYER_BATTERY_25_OFF);
+	
 	//if there's no animation, show the appropriate charge level
 	//otherwise, show increasing charge level at every call
 	if((is_charging == false && charge >= 75)
@@ -432,6 +442,8 @@ static void handle_tick(struct tm *tick_time, TimeUnits units_changed)
 {
 	if(show_stat == true || is_init_complete == false) return;
 	
+	minute_num = tick_time->tm_min % 5;
+		
 	//every five minutes, the screen will clear
 	//and be updated with the current time eventually
 	if(tick_time->tm_min % 5 == 0) 
@@ -609,3 +621,4 @@ int main(void)
 	app_event_loop();
 	deinit();
 }
+

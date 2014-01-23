@@ -50,15 +50,20 @@
 #define LAYER_BATTERY_50 26
 #define LAYER_BATTERY_75 27
 #define LAYER_BATTERY_100 28
-	
-#define LAYER_DAY 29
 
-#define SPLASH_TWEAKED 30
-#define SPLASH_BY 31
-#define SPLASH_IHTNC 32
-#define SPLASH_SMART 33
-#define SPLASH_SQUARE 34
-#define SPLASH_C 35
+#define LAYER_BATTERY_25_OFF 29
+#define LAYER_BATTERY_50_OFF 30
+#define LAYER_BATTERY_75_OFF 31
+#define LAYER_BATTERY_100_OFF 32
+	
+#define LAYER_DAY 33
+
+#define SPLASH_TWEAKED 34
+#define SPLASH_BY 35
+#define SPLASH_IHTNC 36
+#define SPLASH_SMART 37
+#define SPLASH_SQUARE 38
+#define SPLASH_C 39
 
 typedef struct
 {
