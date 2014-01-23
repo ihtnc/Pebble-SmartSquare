@@ -495,6 +495,11 @@ static void display_stat()
 		charge = batt.charge_percent;
 	}
 	
+	word_mark(LAYER_BATTERY_100, 0);
+	word_mark(LAYER_BATTERY_75, 0);
+	word_mark(LAYER_BATTERY_50, 0);
+	word_mark(LAYER_BATTERY_25, 0);
+	
 	//if there's no animation, show the appropriate charge level
 	//otherwise, show increasing charge level at every call
 	if((is_charging == false && charge >= 75)
@@ -882,3 +887,4 @@ int main(void)
 	app_event_loop();
 	deinit();
 }
+
