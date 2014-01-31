@@ -12,41 +12,41 @@ static GFont font;
   Time:          Status:        Square:        Splash:
   012345678901   012345678901   012345678901   012345678901 
 0 ALASUNADIYES 0 ............ 0 ALASUNADIYES 0 tweakedDIYES 0  
-1 DOSEKWATRO.. 1 .........OFF 1 DOSEKWATROFF 1 DOSEKWARbyFF 1  
-2 SINGKOTSONSE 2 ........ON.. 2 SINGKOTSONSE 2 SINGKOTSONSE 2  
-3 TRESAISIYETE 3 ...........E 3 TRESAISIYETE 3 TREihtncYETE 3  
-4 NUWEBE.BENTE 4 ...........E 4 NUWEBEwBENTE 4 NUWEBEWBENTE 4  
-5 DIYESIKWENTA 5 ...........A 5 DIYESIKWENTA 5 DIYESIKWENTA 5  
-6 ....KWARENTA 6 12XX.......A 6 XXXXKWARENTA 6 XXXXKWAsmart 6  
+1 DOSEKWATRO.. 1 ..........DY 1 DOSEKWATRODY 1 DOSEKWARbyFF 1  
+2 SINGKOTSONSE 2 ............ 2 SINGKOTSONSE 2 SINGKOTSONSE 2  
+3 TRESAISIYETE 3 ............ 3 TRESAISIYETE 3 TREihtncYETE 3  
+4 NUWEBE.BENTE 4 ............ 4 NUWEBEwBENTE 4 NUWEBEWBENTE 4  
+5 DIYESIKWENTA 5 ............ 5 DIYESIKWENTA 5 DIYESIKWENTA 5  
+6 ....KWARENTA 6 XXXX........ 6 XXXXKWARENTA 6 XXXXKWAsmart 6  
 7 TRENTAKINSEY 7 ............ 7 TRENTAKINSEY 7 TRENTAsquare 7  
-8 SINGKO.MEDYA 8 ............ 8 SINGKOyMEDYA 8 phNGK(c)2014 8  
+8 SINGKO.MEDYA 8 ......X..... 8 SINGKO!MEDYA 8 phNGK(c)2014 8  
   012345678901   012345678901   012345678901   012345678901    
 */
 
 static const text_t default_text[] =
 {
 	[DEFAULT_TEXT_1] = { "alasunadiyes" },
-	[DEFAULT_TEXT_2] = { "dosekwatroff" },
+	[DEFAULT_TEXT_2] = { "dosekwatrody" },
 	[DEFAULT_TEXT_3] = { "singkotsonse" },
 	[DEFAULT_TEXT_4] = { "tresaisiyete" },
 	[DEFAULT_TEXT_5] = { "nuwebewbente" },
 	[DEFAULT_TEXT_6] = { "diyesikwenta" },
 	[DEFAULT_TEXT_7] = { "xxxxkwarenta" },
 	[DEFAULT_TEXT_8] = { "trentakinsey" },
-    [DEFAULT_TEXT_9] = { "singkoymedya" },
+    [DEFAULT_TEXT_9] = { "singkoxmedya" },
 };
 
 static text_t current_text[] =
 {
 	[DEFAULT_TEXT_1] = { "alasunadiyes" },
-	[DEFAULT_TEXT_2] = { "dosekwatroff" },
+	[DEFAULT_TEXT_2] = { "dosekwatrody" },
 	[DEFAULT_TEXT_3] = { "singkotsonse" },
 	[DEFAULT_TEXT_4] = { "tresaisiyete" },
 	[DEFAULT_TEXT_5] = { "nuwebewbente" },
 	[DEFAULT_TEXT_6] = { "diyesikwenta" },
 	[DEFAULT_TEXT_7] = { "xxxxkwarenta" },
 	[DEFAULT_TEXT_8] = { "trentakinsey" },
-    [DEFAULT_TEXT_9] = { "singkoymedya" },
+    [DEFAULT_TEXT_9] = { "singkoxmedya" },
 };
 
 #define LAYER_COUNT ((sizeof(default_text) / sizeof(*default_text)))
@@ -81,20 +81,20 @@ static const word_t words[] =
 	[LAYER_ALAS] = { 0, 0, "ALAS" },
 	[LAYER_Y] = { 7, 11, "Y" },
 	
-	[LAYER_BT_OFF] = { 1, 9, "OFF" },
-	[LAYER_BT_ON] = { 2, 8, "ON" },
+	[LAYER_BT_OFF] = { 8, 6, "X" },
+	[LAYER_BT_ON] = { 8, 6, "x" },
 	
-	[LAYER_BATTERY_25] = { 6, 11, "A" },
-	[LAYER_BATTERY_50] = { 5, 11, "A" },
-	[LAYER_BATTERY_75] = { 4, 11, "E" },
-	[LAYER_BATTERY_100] = { 3, 11, "E" },
+	[LAYER_BATTERY_25] = { 6, 0, ":" },
+	[LAYER_BATTERY_50] = { 6, 1, ":" },
+	[LAYER_BATTERY_75] = { 6, 2, ":" },
+	[LAYER_BATTERY_100] = { 6, 3, ":" },
 	
-	[LAYER_BATTERY_25_OFF] = { 6, 11, "a" },
-	[LAYER_BATTERY_50_OFF] = { 5, 11, "a" },
-	[LAYER_BATTERY_75_OFF] = { 4, 11, "e" },
-	[LAYER_BATTERY_100_OFF] = { 3, 11, "e" },
+	[LAYER_BATTERY_25_OFF] = { 6, 0, "x" },
+	[LAYER_BATTERY_50_OFF] = { 6, 1, "x" },
+	[LAYER_BATTERY_75_OFF] = { 6, 2, "x" },
+	[LAYER_BATTERY_100_OFF] = { 6, 3, "x" },
 	
-	[LAYER_DAY] = { 6, 0, "XX" },
+	[LAYER_DAY] = { 1, 10, "dy" },
 		
 	[SPLASH_TWEAKED] = {  0, 0, "TWEAKED" },
 	[SPLASH_BY] = {  1, 8, "BY" },
@@ -331,14 +331,14 @@ static void reset_words()
 
 /** Called when watch is tapped or for each animation frame
 ............
-.........OFF
-........ON..
-...........E
-...........E
-...........A
-12XX.......A
+..........DY
 ............
 ............
+............
+............
+XXXX........
+............
+......X.....
 */
 static void display_stat()
 {
@@ -393,8 +393,8 @@ static void display_stat()
 
 static void handle_timer(void *data)
 {	
-    app_timer_cancel(timer);
-	determine_invert_status();
+	timer = NULL;
+    determine_invert_status();
 	
 	if(is_splash_showing == true)
 	{
@@ -536,10 +536,6 @@ static void splash_init()
 {
 	display_splash();
 	
-	static char *xcur = "123456789012_";
-	snprintf(xcur, strlen(xcur), "%s", "splash_init");
-	APP_LOG(APP_LOG_LEVEL_DEBUG, xcur);
-	
 	timer = app_timer_register(2250, handle_timer, NULL);
 }
 
@@ -568,8 +564,11 @@ static void layer_init(int index)
 
 static void deinit() 
 {
-	app_timer_cancel(timer);
-    free(timer); 
+	if(timer != NULL)
+	{
+		app_timer_cancel(timer);
+    	free(timer); 
+	}
 	
 	face_deinit();
 	
@@ -621,4 +620,3 @@ int main(void)
 	app_event_loop();
 	deinit();
 }
-

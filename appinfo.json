@@ -6,12 +6,12 @@
         "BTNotification": 29061,
         "InvertMode": 29060
     },
-    "longName": "Pebble-SmartSquare-ph_PH",
+    "longName": "SmartSquare (PH)",
     "versionCode": 1,
     "capabilities": [
         "configurable"
     ],
-    "shortName": "SmartSquare-ph_PH",
+    "shortName": "SmartSquare (PH)",
     "companyName": "ihopethisnamecounts",
     "watchapp": {
         "watchface": true

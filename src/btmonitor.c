@@ -23,6 +23,7 @@ const VibePattern vibes_connect_pattern =
 
 static void app_timer_callback(void *context)
 {
+		timer = NULL;
         vibe_index++;
         bool needs_vibrate = get_bt_notification_value();
         is_connected = bluetooth_connection_service_peek();
@@ -81,12 +82,7 @@ static void bluetooth_connection_callback(bool connected)
                 APP_LOG(APP_LOG_LEVEL_DEBUG, output);
                 #endif
                         
-                timer = app_timer_register(vibe_freq[vibe_index] * 60 * 1000, 
-                                                                   (AppTimerCallback)
-                                                                   {
-                                                                           app_timer_callback
-                                                                   }, 
-                                                                   NULL);
+                timer = app_timer_register(vibe_freq[vibe_index] * 60 * 1000, app_timer_callback, NULL);
         }
         else
         {
@@ -127,5 +123,9 @@ void btmonitor_init()
 void btmonitor_deinit() 
 {
         bluetooth_connection_service_unsubscribe();
-        free(timer);
+        if(timer != NULL) 
+		{
+			app_timer_cancel(timer);
+			free(timer);
+		}
 }

@@ -56,7 +56,7 @@ Pebble.addEventListener("showConfiguration", function(e) {
                         "}" +
                 "]";
         var url = "http://ihtnc-pebble-config.azurewebsites.net/?";
-        var title = "&title=SmartSquare+(ph_PH)+Configuration";
+        var title = "&title=SmartSquare+(PH)+Configuration";
         var fields = "&fields=" + encodeURIComponent(json);
         
         if(enable_logging) console.log("Pebble.showConfiguration: url=" + url + title + fields);
